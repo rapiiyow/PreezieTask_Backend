@@ -1,0 +1,6 @@
+@PreezieTask_HostAddress = http://localhost:5299
+
+GET {{PreezieTask_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
