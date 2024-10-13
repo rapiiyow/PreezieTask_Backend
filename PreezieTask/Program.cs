@@ -2,25 +2,25 @@ using TodoApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the container, including controllers
 builder.Services.AddControllers();
 
-// Add CORS policy
+// Add CORS policy to allow requests from the React frontend (running on http://localhost:3000)
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(builder =>
     {
         builder.WithOrigins("http://localhost:3000") // Allow frontend to access
                .AllowAnyHeader()
-               .AllowAnyMethod();
+               .AllowAnyMethod(); // Allow all headers and methods
     });
 });
 
-// Register the Swagger generator
+// Register Swagger services for API documentation
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Register TodoService as a singleton
+// Register TodoService as a singleton to manage todo-related logic and data
 builder.Services.AddSingleton<ITodoService, TodoService>();
 
 var app = builder.Build();

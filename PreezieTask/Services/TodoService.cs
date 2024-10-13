@@ -1,11 +1,18 @@
 ﻿namespace TodoApi.Services
 {
+    /// <summary>
+    /// The TodoService handles all business logic related to managing Todo items.
+    /// </summary>
     public class TodoService : ITodoService
     {
-        private readonly List<TodoItem> _todos = new();
-        private int _nextId = 1;
-        private readonly object _lockObject = new(); // Lock object for synchronization
+        private readonly List<TodoItem> _todos = new(); // In-memory list of Todo items (shared resource)
+        private int _nextId = 1; // Counter for assigning unique IDs to new Todo items
+        private readonly object _lockObject = new(); // Lock object to ensure thread safety
 
+        /// <summary>
+        /// Fetch all Todo items (returns a thread-safe copy of the list)
+        /// </summary>
+        /// <returns>List of Todos</returns>
         public IEnumerable<TodoItem> GetTodos()
         {
             lock (_lockObject) // Synchronize access to the shared resource
@@ -14,6 +21,10 @@
             }
         }
 
+        /// <summary>
+        /// Add a new Todo item to the list (thread-safe)
+        /// </summary>
+        /// <param name="item"></param>
         public void AddTodoItem(TodoItem item)
         {
             lock (_lockObject) // Lock the section where the list is modified
@@ -23,6 +34,11 @@
             }
         }
 
+        /// <summary>
+        /// Toggle the completion status of a Todo item (thread-safe)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public bool ToggleTodoCompletion(int id)
         {
             lock (_lockObject) // Ensure thread-safe access to the list
@@ -37,6 +53,11 @@
             }
         }
 
+        /// <summary>
+        /// Remove a Todo item by its ID (thread-safe)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Success indicator</returns>
         public bool DeleteTodoItem(int id)
         {
             lock (_lockObject) // Ensure thread-safe deletion
